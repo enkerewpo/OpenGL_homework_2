@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Libraries\glad\include;D:\Libraries\glfw-3.3.4.bin.WIN32\glfw-3.3.4.bin.WIN32\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Libraries\glfw-3.3.4.bin.WIN32\glfw-3.3.4.bin.WIN32\lib-vc2019;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\Libraries\glad\src\glad.c" />
     <ClCompile Include="OpenGL_homework_2.cpp" />
+    <ClCompile Include="stb_image.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
