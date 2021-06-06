@@ -58,8 +58,6 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, VBO); // bind "VBO" as CURRENT array buffer
     glBufferData(GL_ARRAY_BUFFER, sizeof(v), v, GL_STATIC_DRAW); // send v to VBO which is the CURRENT array buffer
 
-
-
     while (!glfwWindowShouldClose(window))
     {
 
