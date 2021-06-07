@@ -37,9 +37,8 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 
-// a vector for storing drawn cubes !
 std::vector<glm::vec3> drawnCubes;
-
+glm::vec3 drawCubePos;
 
 int main()
 {
@@ -233,31 +232,24 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
+        drawCubePos = camera.Position + camera.Front * 4.0f;
     
-        cubeShader.use();
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0, 0, 0));
-        cubeShader.setMat4("model", model);
-        cubeShader.setMat4("view", view);
-        cubeShader.setMat4("projection", projection);
-        glBindVertexArray(cubeVAO);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, cubeTexture);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-
-
-        cubeShader.use();
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, camera.Position + camera.Front * 4.0f);
-        cubeShader.setMat4("model", model);
-        cubeShader.setMat4("view", view);
-        cubeShader.setMat4("projection", projection);
-        glBindVertexArray(cubeVAO);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, cubeTexture);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
+        std::vector<glm::vec3>::iterator it;
+        std::cout << drawnCubes.size() << std::endl;
+        for (it = drawnCubes.begin(); it != drawnCubes.end(); it++) {
+            glm::vec3 p = *it;
+            cubeShader.use();
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, p);
+            cubeShader.setMat4("model", model);
+            cubeShader.setMat4("view", view);
+            cubeShader.setMat4("projection", projection);
+            glBindVertexArray(cubeVAO);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, cubeTexture);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glBindVertexArray(0);
+        }
 
 
         // draw the skybox in every frame
@@ -293,7 +285,7 @@ int main()
 void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+        glfwSetWindowShouldClose(window, true);  // press key <esc> to quit
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -307,11 +299,13 @@ void processInput(GLFWwindow* window)
     // added Minecraft like movement
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) // press <space> to fly up 
         camera.ProcessKeyboard(UP, deltaTime);
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) // pree <left control> to fly down
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) // press <left control> to fly down
         camera.ProcessKeyboard(DOWN, deltaTime);
 
-
-    // let's draw an  awesome cube!
+    // let's draw an  awesome cube by adding its position into the vector!
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+        drawnCubes.push_back(drawCubePos);
+    }
 
 }
 
