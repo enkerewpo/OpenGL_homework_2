@@ -12,6 +12,9 @@
 #include <string>
 #include <iostream>
 
+#include <windows.h>
+#include <cstdlib>
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
@@ -43,6 +46,17 @@ glm::vec3 drawCubePos;
 
 int main()
 {
+    // instructions!
+
+    printf("\n    PLEASE READ THE INSTRUCTIONS BELOW:\n");
+    printf("\n\n    Welcome to NWPU 3D-drawing playground!\n");
+    printf("\n          Press W/A/S/D     ->   movement control just like any FPS games.\n");
+    printf("\n          Mouse             ->   camera control just like FPS games!\n");
+    printf("\n          Left Mouse Click  ->   draw a single cude with NWPU icon!\n");
+    printf("\n          Press E           ->   draw lots of, lots of, lots of cubes! \n");
+    printf("\n          Press ESC         ->   quit the playground!\n\n    ");
+    system("pause");
+
 
     // preparations for everything
 
@@ -278,6 +292,12 @@ int main()
     glDeleteBuffers(1, &skyboxVBO);
 
     glfwTerminate();
+    
+    puts("");
+    printf("    +-----------------------------------+\n" 
+           "    |    Goodbye and have a nice day!   |\n"   
+           "    +-----------------------------------+\n\n    ");
+    system("pause");
     return 0;
 }
 
