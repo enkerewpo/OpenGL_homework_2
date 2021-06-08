@@ -52,8 +52,10 @@ int main()
     printf("\n\n    Welcome to NWPU 3D-drawing playground!\n");
     printf("\n          Press W/A/S/D     ->   movement control just like any FPS games.\n");
     printf("\n          Mouse             ->   camera control just like FPS games!\n");
-    printf("\n          Left Mouse Click  ->   draw a single cude with NWPU icon!\n");
+    printf("\n          Left Mouse Click  ->   draw a single cube with NWPU icon!\n");
     printf("\n          Press E           ->   draw lots of, lots of, lots of cubes! \n");
+    printf("\n          Press Space       ->   fly UP\n");
+    printf("\n          Press Left Ctrl   ->   fly DOWN \n");
     printf("\n          Press ESC         ->   quit the playground!\n\n    ");
     system("pause");
 
