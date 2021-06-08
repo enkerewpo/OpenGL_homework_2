@@ -14,6 +14,7 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void processInput(GLFWwindow* window);
 unsigned int loadTexture(const char* path);
 unsigned int loadCubemap(std::vector<std::string> faces);
@@ -61,7 +62,7 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -225,7 +226,6 @@ int main()
 
         processInput(window);
 
-
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -235,7 +235,7 @@ int main()
         drawCubePos = camera.Position + camera.Front * 4.0f;
     
         std::vector<glm::vec3>::iterator it;
-        std::cout << drawnCubes.size() << std::endl;
+        // std::cout << drawnCubes.size() << std::endl;
         for (it = drawnCubes.begin(); it != drawnCubes.end(); it++) {
             glm::vec3 p = *it;
             cubeShader.use();
@@ -302,22 +302,28 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) // press <left control> to fly down
         camera.ProcessKeyboard(DOWN, deltaTime);
 
-    // let's draw an  awesome cube by adding its position into the vector!
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) // press <left control> to fly down
         drawnCubes.push_back(drawCubePos);
-    }
 
 }
-
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        // let's draw an  awesome cube by adding its position into the vector!
+        drawnCubes.push_back(drawCubePos);
+    }
+}
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+
+
     if (firstMouse)
     {
         lastX = xpos;
