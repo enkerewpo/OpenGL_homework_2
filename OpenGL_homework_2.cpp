@@ -18,10 +18,11 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void T_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void processInput(GLFWwindow* window);
 unsigned int loadTexture(const char* path);
 unsigned int loadCubemap(std::vector<std::string> faces);
-
+int skybox_light = 0;
 const unsigned int SCR_WIDTH = 1366;
 const unsigned int SCR_HEIGHT = 768;
 
@@ -56,6 +57,7 @@ int main()
     printf("\n          Press E           ->   draw lots of, lots of, lots of cubes! \n");
     printf("\n          Press Space       ->   fly UP\n");
     printf("\n          Press Left Ctrl   ->   fly DOWN \n");
+    printf("\n          Press T           ->   Switch Time(Day/Dusk/Night) \n");
     printf("\n          Press ESC         ->   quit the playground!\n\n    ");
     system("pause");
 
@@ -79,6 +81,7 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetKeyCallback(window, T_key_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -212,18 +215,34 @@ int main()
 
     std::string img1 = "image/wood.jpg";
     unsigned int cubeTexture = loadTexture(img1.c_str());
-    
-    std::vector<std::string> faces {
-        "image/skybox/right.jpg",
-        "image/skybox/left.jpg",
-        "image/skybox/top.jpg",
-        "image/skybox/bottom.jpg",
-        "image/skybox/front.jpg",
-        "image/skybox/back.jpg"
+
+    std::vector<std::string> faces_day{
+        "image/skybox/day/right.jpg",
+        "image/skybox/day/left.jpg",
+        "image/skybox/day/top.jpg",
+        "image/skybox/day/bottom.jpg",
+        "image/skybox/day/front.jpg",
+        "image/skybox/day/back.jpg"
     };
-    unsigned int cubemapTexture = loadCubemap(faces);
-
-
+    std::vector<std::string> faces_dusk{
+        "image/skybox/dusk/right.jpg",
+        "image/skybox/dusk/left.jpg",
+        "image/skybox/dusk/top.jpg",
+        "image/skybox/dusk/bottom.jpg",
+        "image/skybox/dusk/front.jpg",
+        "image/skybox/dusk/back.jpg"
+    };
+    std::vector<std::string> faces_night{
+        "image/skybox/night/right.jpg",
+        "image/skybox/night/left.jpg",
+        "image/skybox/night/top.jpg",
+        "image/skybox/night/bottom.jpg",
+        "image/skybox/night/front.jpg",
+        "image/skybox/night/back.jpg"
+    };
+    unsigned int cubemapTexture_day = loadCubemap(faces_day);
+    unsigned int cubemapTexture_dusk = loadCubemap(faces_dusk);
+    unsigned int cubemapTexture_night = loadCubemap(faces_night);
     cubeShader.use();
     cubeShader.setInt("texture1", 0);
 
@@ -277,7 +296,11 @@ int main()
         skyboxShader.setMat4("projection", projection);
         glBindVertexArray(skyboxVAO);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+        switch (skybox_light) {
+            case 0 : glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture_day); break;
+            case 1 : glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture_dusk); break;
+            case 2 : glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture_night); break;
+        }
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
@@ -331,6 +354,17 @@ void processInput(GLFWwindow* window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void T_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_T && action == GLFW_PRESS)
+    {
+        if (skybox_light == 2) {
+            skybox_light = 0;
+        }
+        else { skybox_light++; }
+    }
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
